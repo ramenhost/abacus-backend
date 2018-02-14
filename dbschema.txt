@@ -1,0 +1,21 @@
+CREATE TABLE `college` (
+  `id` int(5) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+)
+
+CREATE TABLE `participants` (
+  `id` int(5) NOT NULL AUTO_INCREMENT,
+  `aid` varchar(10) DEFAULT NULL,
+  `name` varchar(20) DEFAULT NULL,
+  `email` varchar(50) NOT NULL,
+  `mobile` varchar(15) DEFAULT NULL,
+  `cid` int(5) DEFAULT NULL,
+  `year` int(2) DEFAULT NULL,
+  `password` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `email` (`email`),
+  UNIQUE KEY `aid` (`aid`),
+  KEY `cid` (`cid`),
+  CONSTRAINT `participants_ibfk_1` FOREIGN KEY (`cid`) REFERENCES `college` (`id`)
+)

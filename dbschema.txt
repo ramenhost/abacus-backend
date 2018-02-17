@@ -19,3 +19,28 @@ CREATE TABLE `participants` (
   KEY `cid` (`cid`),
   CONSTRAINT `participants_ibfk_1` FOREIGN KEY (`cid`) REFERENCES `college` (`id`)
 )
+
+CREATE TABLE `event` (
+  `id` int(5) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL,
+  `passphrase` varchar(10) DEFAULT NULL,
+  `forcephrase` varchar(10) DEFAULT NULL,
+  `contact` varchar(13) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+)
+
+CREATE TABLE `checkin` (
+  `eid` int(5) NOT NULL,
+  `aid` varchar(10) NOT NULL,
+  PRIMARY KEY (`eid`,`aid`),
+  KEY `aid` (`aid`),
+  CONSTRAINT `checkin_ibfk_1` FOREIGN KEY (`eid`) REFERENCES `event` (`id`),
+  CONSTRAINT `checkin_ibfk_2` FOREIGN KEY (`aid`) REFERENCES `participants` (`aid`)
+)
+
+CREATE TABLE `checkout` (
+  `aid` varchar(10) NOT NULL,
+  `reqtime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`aid`),
+  CONSTRAINT `checkout_ibfk_1` FOREIGN KEY (`aid`) REFERENCES `participants` (`aid`)
+)

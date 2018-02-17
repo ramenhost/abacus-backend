@@ -34,6 +34,7 @@ func (a *App) Run(addr string) {
 
 func (a *App) initializeRoutes() {
 	a.Router.PathPrefix("/page/").Handler(http.StripPrefix("/page/", http.FileServer(http.Dir("frontend"))))
+	a.Router.PathPrefix("/qr/").Handler(http.StripPrefix("/qr/", http.FileServer(http.Dir("qr"))))
 	a.Router.HandleFunc("/participants/aid/{aid}", a.getParticipantByAID).Methods("GET")
 	a.Router.HandleFunc("/participants/id/{id}", a.getParticipantByID).Methods("GET")
 	a.Router.HandleFunc("/participants", a.createParticipant).Methods("POST")
@@ -41,4 +42,9 @@ func (a *App) initializeRoutes() {
 	a.Router.HandleFunc("/allparticipants", a.getParticipants).Methods("GET")
 	a.Router.HandleFunc("/allcolleges", a.getColleges).Methods("GET")
 	a.Router.HandleFunc("/colleges/id/{id}", a.getCollege).Methods("GET")
+	a.Router.HandleFunc("/checkin", a.checkIn).Methods("POST")
+	a.Router.HandleFunc("/events/{id}/participants", a.getEventParticipants).Methods("GET")
+	a.Router.HandleFunc("/participants/aid/{aid}/events", a.getEventsOfParticipant).Methods("GET")
+	a.Router.HandleFunc("/checkout/{aid}", a.checkOut).Methods("GET")
+	a.Router.HandleFunc("/certrequests", a.getCheckOuts).Methods("GET")
 }

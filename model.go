@@ -12,6 +12,7 @@ type participant struct {
 	Name   string `json:"name"`
 	CID    int    `json:"cid"`
 	Year   int    `json:"year"`
+	Branch string `json:"branch"`
 	Mobile string `json:"mobile"`
 	Email  string `json:"email"`
 }
@@ -41,26 +42,26 @@ type dbresult interface {
 func (p *participant) getParticipant(db *sql.DB, by string) error {
 	switch by {
 	case "aid":
-		statement := fmt.Sprintf("select id, aid, name, cid, year, mobile, email from participants where aid='%s'", p.AID)
+		statement := fmt.Sprintf("select id, aid, name, cid, year, branch, mobile, email from participants where aid='%s'", p.AID)
 		return p.scanParticipant(db.QueryRow(statement))
 	case "id":
-		statement := fmt.Sprintf("select id, aid, name, cid, year, mobile, email from participants where id='%d'", p.ID)
+		statement := fmt.Sprintf("select id, aid, name, cid, year, branch, mobile, email from participants where id='%d'", p.ID)
 		return p.scanParticipant(db.QueryRow(statement))
 	case "email":
-		statement := fmt.Sprintf("select id, aid, name, cid, year, mobile, email from participants where email='%s'", p.Email)
+		statement := fmt.Sprintf("select id, aid, name, cid, year, branch, mobile, email from participants where email='%s'", p.Email)
 		return p.scanParticipant(db.QueryRow(statement))
 	}
 	return errors.New("Invalid option")
 }
 
 func (p *participant) updateParticipant(db *sql.DB) error {
-	stmt, err := db.Prepare("UPDATE participants SET aid=?, name=?, cid=?, year=?, mobile=? WHERE id=?")
+	stmt, err := db.Prepare("UPDATE participants SET aid=?, name=?, cid=?, year=?, branch=?, mobile=? WHERE id=?")
 	if err != nil {
 		return err
 	}
 	p.AID = fmt.Sprintf("ab%05d", p.ID+925)
 	//statement := fmt.Sprintf("INSERT INTO participants(aid, name, cid, year, mobile, email) VALUES('%s', '%s', %d, %d, '%s', '%s')", p.AID, p.Name, p.CID, p.Year, p.Mobile, p.Email)
-	_, err = stmt.Exec(p.AID, p.Name, p.CID, p.Year, p.Mobile, p.ID)
+	_, err = stmt.Exec(p.AID, p.Name, p.CID, p.Year, p.Branch, p.Mobile, p.ID)
 	if err != nil {
 		return err
 	}
@@ -87,7 +88,7 @@ func (p *participant) createParticipant(db *sql.DB) error {
 }
 
 func getParticipants(db *sql.DB) ([]participant, error) {
-	statement := "SELECT id, aid, name, cid, year, mobile, email FROM participants"
+	statement := "SELECT id, aid, name, cid, year, branch, mobile, email FROM participants"
 	rows, err := db.Query(statement)
 	if err != nil {
 		return nil, err
@@ -145,7 +146,7 @@ func (e *event) getPassphrase(db *sql.DB) error {
 }
 
 func (e *event) getParticipants(db *sql.DB) ([]participant, error) {
-	statement := fmt.Sprintf("SELECT id, participants.aid, name, cid, year, mobile, email FROM participants, checkin where checkin.aid=participants.aid and checkin.eid=%d", e.ID)
+	statement := fmt.Sprintf("SELECT id, participants.aid, name, cid, year, branch, mobile, email FROM participants, checkin where checkin.aid=participants.aid and checkin.eid=%d", e.ID)
 	rows, err := db.Query(statement)
 	if err != nil {
 		return nil, err
@@ -193,7 +194,7 @@ func (p *participant) checkOut(db *sql.DB) error {
 }
 
 func getCheckOuts(db *sql.DB) ([]participant, error) {
-	statement := "SELECT id, participants.aid, name, cid, year, mobile, email FROM participants, checkout where participants.aid=checkout.aid"
+	statement := "SELECT id, participants.aid, name, cid, year, branch, mobile, email FROM participants, checkout where participants.aid=checkout.aid"
 	rows, err := db.Query(statement)
 	if err != nil {
 		return nil, err
@@ -216,7 +217,8 @@ func (p *participant) scanParticipant(res dbresult) error {
 	var cid sql.NullInt64
 	var year sql.NullInt64
 	var mobile sql.NullString
-	if err := res.Scan(&p.ID, &aid, &name, &cid, &year, &mobile, &p.Email); err != nil {
+	var branch sql.NullString
+	if err := res.Scan(&p.ID, &aid, &name, &cid, &year, &branch, &mobile, &p.Email); err != nil {
 		return err
 	}
 	p.AID = ""
@@ -238,6 +240,10 @@ func (p *participant) scanParticipant(res dbresult) error {
 	p.Mobile = ""
 	if mobile.Valid {
 		p.Mobile = mobile.String
+	}
+	p.Branch = ""
+	if branch.Valid {
+		p.Branch = branch.String
 	}
 	return nil
 }

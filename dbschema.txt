@@ -11,6 +11,7 @@ CREATE TABLE `participants` (
   `email` varchar(50) NOT NULL,
   `mobile` varchar(15) DEFAULT NULL,
   `cid` int(5) DEFAULT NULL,
+  `branch` varchar(50) DEFAULT NULL,
   `year` int(2) DEFAULT NULL,
   `password` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -45,8 +46,8 @@ CREATE TABLE `checkout` (
   CONSTRAINT `checkout_ibfk_1` FOREIGN KEY (`aid`) REFERENCES `participants` (`aid`)
 )
 
-LOAD LOCAL DATA INFILE 'colleges.csv' 
-INTO TABLE discounts 
+LOAD DATA LOCAL INFILE 'colleges.csv' 
+INTO TABLE college 
 FIELDS TERMINATED BY ',' 
 ENCLOSED BY '"'
 LINES TERMINATED BY '\r';

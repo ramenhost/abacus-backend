@@ -44,3 +44,9 @@ CREATE TABLE `checkout` (
   PRIMARY KEY (`aid`),
   CONSTRAINT `checkout_ibfk_1` FOREIGN KEY (`aid`) REFERENCES `participants` (`aid`)
 )
+
+LOAD LOCAL DATA INFILE 'colleges.csv' 
+INTO TABLE discounts 
+FIELDS TERMINATED BY ',' 
+ENCLOSED BY '"'
+LINES TERMINATED BY '\r';

@@ -96,7 +96,7 @@
         <input type="text" placeholder="Phone" id="phone" name="phone" />
       </div>
       <div class="col-sm-12 col-md-6">
-        <input type="text" placeholder="Department" id="dept" name="phone" />
+        <input type="text" placeholder="Department" id="dept" name="dept" />
       </div>
     </div>
     <div class="row">
@@ -145,7 +145,7 @@ var id = queryStr.substr(1).split("=")[1]
             $(".select2").addClass('hi');
 
             $.ajax({
-              url: "https://dash.abacus.org.in/participants/id/" + id,
+              url: "https://dash.abacus.org.in/participants/id/47",
               success: function(result){
                 $("#email").val(result.email);
               }
@@ -169,10 +169,10 @@ var id = queryStr.substr(1).split("=")[1]
               var dept = $("#dept").val();
               var college = $( "#college option:selected" ).val();
               var year = $("#year option:selected").text();
-             var obj = '{"name":"' + name + '","phone":"' + phone + '","year":' + year + ',"cid":' + college + ',"branch":"' + dept + '"}';
+             var obj = '{"name":"' + name + '","mobile":"' + phone + '","year":' + year + ',"cid":' + college + ',"branch":"' + dept + '"}';
              console.log(obj);
               $.ajax({
-                url: "https://dash.abacus.org.in/participants/id/" + id,
+                url: "https://dash.abacus.org.in/participants/id/47",
                 type: 'POST',
                 dataType: "json",
                 contentType: "json",

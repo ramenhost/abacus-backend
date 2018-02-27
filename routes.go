@@ -206,6 +206,7 @@ func (a *App) checkOut(w http.ResponseWriter, r *http.Request) {
 		respondWithError(w, http.StatusBadRequest, err.Error())
 		return
 	}
+	go helpers.SendCheckout(p.AID)
 	respondWithJSON(w, http.StatusOK, struct {
 		Success string `json:"message"`
 	}{"Certificate Requested"})
